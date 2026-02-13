@@ -1,0 +1,9 @@
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+set +e
+npm run lint
+exitCode=$?
+set -e
+[ $exitCode != 0 ] && echo -e "${RED}Error${NC} run 'npm run lint:fix' and fix the remaining warning or errors" && exit $exitCode
+
+exit 0
