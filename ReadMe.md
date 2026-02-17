@@ -1,4 +1,4 @@
-# Cloud Infrastructure Monitoring & Protection System
+# Cloud Infrastructure Monitoring
 
 ## Overview
 
