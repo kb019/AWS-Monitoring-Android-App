@@ -1,10 +1,11 @@
 import React from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { InstanceCard } from "../components/InstanceCard";
-import { mockInstances } from "../data/mockInstances";
-import type { InstanceSummary } from "../types/instances";
 
-export function InstancesListScreen() {
+import { InstanceCard } from "@/components/InstanceCard";
+import { mockInstances } from "@/data/mockInstances";
+import type { InstanceSummary } from "@/types/instances";
+
+export default function InstancesScreen() {
   const renderItem = ({ item }: { item: InstanceSummary }) => (
     <InstanceCard instance={item} />
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import type { InstanceState, InstanceSummary } from "../types/instances";
+import type { InstanceState, InstanceSummary } from "@/types/instances";
 
 const STATE_COLORS: Record<InstanceState, { bg: string; text: string }> = {
   pending: { bg: "#FEF3C7", text: "#92400E" },
@@ -22,7 +22,8 @@ export function InstanceCard({ instance }: InstanceCardProps) {
     <View style={styles.card}>
       <View style={styles.headerRow}>
         <Text style={styles.name}>{instance.name}</Text>
-        <View style={[styles.statePill, { backgroundColor: stateStyle.bg }]}
+        <View
+          style={[styles.statePill, { backgroundColor: stateStyle.bg }]}
           accessibilityLabel={`Instance state ${instance.state}`}
         >
           <Text style={[styles.stateText, { color: stateStyle.text }]}>
