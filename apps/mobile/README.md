@@ -19,9 +19,20 @@ This folder is reserved for the iOS/Android client. The mobile app is planned bu
 - Define the API base URL via environment variables (for example in `.env`).
 - Document required values here once the backend API contract is finalized.
 
+**OpenAPI Client**
+- The shared OpenAPI client lives in `packages/api-client`.
+- Place the spec at `docs/openapi/openapi.yaml`, then run `npm run generate --workspace ./packages/api-client`.
+- Use `createApiClient` in the mobile app with your base URL.
+
+```ts
+import { createApiClient } from "api-client";
+
+const api = createApiClient(API_BASE_URL);
+```
+
 **What To Commit**
 - Commit `package.json`, app configuration (`app.json`/`app.config.*`), source (`src/` or `app/`), `assets/`, and TypeScript config.
 - Do not commit `node_modules/`, `ios/Pods/`, `android/.gradle/`, `.expo/`, build outputs, or local Xcode/Android Studio user data.
 
 **Next Step**
-When the mobile app is scaffolded, replace the placeholders above with the exact commands and folder layout used by the project.
+When the mobile app is scaffolded, replace the placeholders above with the exact commands and folder layout used.
