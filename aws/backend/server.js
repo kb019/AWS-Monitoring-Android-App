@@ -147,7 +147,7 @@ app.get("/monitoring", async (req,res) =>
   }
 });
 
-app.listen(5000, () =>
+app.listen(5000, "0.0.0.0", () =>
 {
   console.log("Server started successfully");
 });
