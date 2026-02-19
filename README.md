@@ -206,3 +206,10 @@ Create `apps/web/.env`:
 ```
 VITE_API_URL=http://localhost:8080
 ```
+
+## Setup
+
+Please run `npm run setup` while starting the project
+
+To Run the Webapp: Please run `npm run dev:client`
+

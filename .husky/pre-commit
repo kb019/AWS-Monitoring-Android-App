@@ -1,0 +1,9 @@
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+set +e
+npm run lint --prefix ./apps/web
+exitCode=$?
+set -e
+[ $exitCode != 0 ] && echo -e "${RED}Error${NC} running 'npm run lint' and fix the remaining warning or errors" && exit $exitCode
+
+exit 0

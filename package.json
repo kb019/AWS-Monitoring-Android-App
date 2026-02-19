@@ -1,0 +1,43 @@
+{
+  "name": "aws-monitoring-workspace",
+  "version": "1.0.0",
+  "description": "\"Workspace for Team 5 Project\"",
+  "keywords": [
+    "\"aws\"",
+    "\"monitoring\""
+  ],
+  "homepage": "https://github.com/kb019/AWS-Monitoring-Android-App#readme",
+  "bugs": {
+    "url": "https://github.com/kb019/AWS-Monitoring-Android-App/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kb019/AWS-Monitoring-Android-App.git"
+  },
+  "license": "ISC",
+  "author": "Team5",
+  "type": "module",
+  "workspaces": [
+    "packages/api-client"
+  ],
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:api": "npm run lint --workspace=./packages/api-client",
+    "lint:webapp": "npm run lint --prefix ./apps/web",
+    "lint": "npm run lint:api && npm run lint:webapp ",
+    "install:dep": "npm install && npm install --prefix ./apps/web",
+    "setup":"npm run install:dep && npm run build --prefix ./packages/api-client",
+    "install:web": "npm install --prefix ./apps/web",
+    "web:dev": "npm run dev --prefix ./apps/web",
+    "api-client:dev": "npm run dev --prefix ./packages/api-client",
+    "dev:client": "concurrently --kill-others \"npm run api-client:dev\" \"npm run web:dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "husky": "^9.1.7"
+  }
+}
