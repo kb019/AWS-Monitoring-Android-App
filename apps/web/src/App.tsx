@@ -3,6 +3,7 @@ import Layout from "./pages/Layout";
 import Login from "./pages/Login";
 import Instances from "./pages/Instances";
 import InstanceDetail from "./pages/InstanceDetail";
+import "./App.css";
 
 export default function App() {
   return (

@@ -2,11 +2,12 @@
 
 ## Overview
 
-This project is a multi-platform cloud monitoring and protection system built on AWS. It enables users to monitor, manage, and secure virtual machines (EC2 instances) through:
+This project is a multi-platform cloud monitoring and protection system built on AWS. The repository currently contains:
 
-- Web Application (React + TypeScript)
-- iOS Application (React Native)
-- Android Application (React Native)
+- Web Application (React + TypeScript) in `apps/web`
+- AWS setup/runbook docs in `docs/`
+
+Mobile apps (React Native) and a backend API are planned but are not in this repo yet.
 
 The system monitors two EC2 instances:
 - Web Server
@@ -16,7 +17,19 @@ The backend communicates with AWS services using AWS APIs and exposes a unified 
 
 ---
 
-## System Architecture
+## Repository Structure (Current)
+
+```
+/apps/web                # Web app (React + TypeScript)
+/docs
+  /aws/sprint1            # AWS setup/runbooks and queries
+  /sprint1-dmehta33       # Additional sprint docs
+  /templates             # Archived templates (e.g., Vite README)
+```
+
+---
+
+## System Architecture (Target)
 
 ### High-Level Architecture
 
@@ -46,28 +59,28 @@ AWS EC2    CloudWatch   IAM / Auth
 
 ### 1. Frontend Layer
 
-#### Web Application
+#### Web Application (Implemented)
 - React + TypeScript
 - React Router
 - Environment-based API configuration
-- TanStack Query for data fetching
+- TanStack Query for data fetching (planned)
 - Role-based UI rendering
 
-#### Mobile Applications
+#### Mobile Applications (Planned)
 - React Native + TypeScript
-- One shared mobile codebase for:
-  - iOS (built with Xcode)
-  - Android (built with Android Studio)
+- One shared mobile codebase
+- iOS (built with Xcode)
+- Android (built with Android Studio)
 - Secure token storage
 - Native navigation
 - Charts for metrics
 
-All frontend platforms:
+Frontend platforms:
 - Consume the same backend API
-- Use the same OpenAPI-generated TypeScript client
+- Use the same OpenAPI-generated TypeScript client (planned)
 - Enforce role-based access in the UI
 
-### 2. Backend Layer
+### 2. Backend Layer (External/Planned)
 
 The backend acts as a secure control plane between clients and AWS.
 
@@ -102,9 +115,7 @@ The system monitors:
 
 ---
 
-## Development Strategy
-
-### Monorepo Structure (Recommended)
+## Development Strategy (Planned Monorepo)
 
 ```
 /apps
@@ -133,17 +144,16 @@ The system monitors:
 
 ### Branch Naming Convention
 
-- `main` – Production-ready code
-- `develop` – Integration branch for features
-- `feature/<name>` – New features
-- `bugfix/<name>` – Bug fixes
-
+- `main` - Production-ready code
+- `dev` - Integration branch for features
+- `feature/<name>` - New features
+- `bugfix/<name>` - Bug fixes
 
 ### Creating a Branch
 
 ```bash
-git checkout develop
-git pull origin develop
+git checkout dev
+git pull origin dev
 git checkout -b feature/your-feature-name
 ```
 
@@ -173,7 +183,7 @@ Then create a Pull Request on GitHub:
 ### Merging Strategy
 
 - Squash commits for feature branches
-- Merge `develop` into `main` for releases only
+- Merge `dev` into `main` for releases only
 - Delete branch after merging
 
 ---
@@ -181,10 +191,7 @@ Then create a Pull Request on GitHub:
 ## Authentication & Security
 
 - JWT-based authentication
-- Role-based access:
-  - Viewer (read-only)
-  - Operator (start/stop/reboot)
-  - Admin (terminate, manage alarms)
+- Role-based access: Viewer (read-only), Operator (start/stop/reboot), Admin (terminate, manage alarms)
 - No AWS credentials stored on client
 - All AWS calls handled server-side
 
@@ -194,37 +201,15 @@ Then create a Pull Request on GitHub:
 
 ### Web Environment Variables
 
+Create `apps/web/.env`:
+
 ```
 VITE_API_URL=http://localhost:8080
 ```
 
-**Production:**
+## Setup
 
-```
-VITE_API_URL=https://api.production-url.com
-```
+Please run `npm run setup` while starting the project
 
-Mobile environment uses secure runtime configuration.
-
----
-
-## Project Goals
-
-- Demonstrate use of AWS APIs for infrastructure management
-- Build cross-platform client applications
-- Implement secure system design
-- Provide real-time cloud infrastructure monitoring
-- Include protection mechanisms beyond simple monitoring
-
----
-
-## Why This Architecture?
-
-This architecture allows:
-- Code reuse across platforms
-- Clear separation of concerns
-- Secure AWS integration
-- Scalable backend control
-- Consistent user experience across devices
-- Reduced duplication compared to three fully separate native apps
+To Run the Webapp: Please run `npm run dev:client`
 

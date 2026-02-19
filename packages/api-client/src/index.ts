@@ -1,4 +1,5 @@
-import { API_URL } from "../config";
+import { API_URL } from "./constants";
+
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
@@ -16,3 +17,4 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
 
   return (await res.json()) as T;
 }
+
