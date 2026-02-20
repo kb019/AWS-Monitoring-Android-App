@@ -13,9 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build":"tsc",
-    "dev":"tsc --watch"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.3"
+    "dev":"tsc --watch",
+    "lint":"eslint . --max-warnings=0",
+    "lint:fix":"eslint . --fix"
   }
 }

@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "expo lint --max-warnings=0",
+    "lint:fix":"expo lint --fix"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.14.0",
@@ -20,7 +22,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
-    "typescript": "~5.9.2"
+    "eslint-config-expo": "~10.0.0"
   },
   "private": true
 }
