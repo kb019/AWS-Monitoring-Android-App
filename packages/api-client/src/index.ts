@@ -1,13 +1,17 @@
-import { API_URL } from "./constants";
+import { API_URL, getApiBaseUrl, setApiBaseUrl } from "./constants";
 
+export { API_URL, getApiBaseUrl, setApiBaseUrl };
 
-export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const baseUrl = getApiBaseUrl().replace(/\/+$/, "");
+  const endpoint = path.startsWith("/") ? path : `/${path}`;
+
+  const res = await fetch(`${baseUrl}${endpoint}`, {
+    ...init,
     headers: {
       "Content-Type": "application/json",
-      ...(init?.headers || {}),
+      ...(init.headers || {}),
     },
-    ...init,
   });
 
   if (!res.ok) {
