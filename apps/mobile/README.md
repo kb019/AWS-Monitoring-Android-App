@@ -1,42 +1,54 @@
-# Mobile App (React Native, Expo, TypeScript)
+# Mobile App (Expo)
 
-## Run (Path B, no iOS simulator)
-npm install
-npx expo start --web --clear
+This is the mobile app for the Cloud Infrastructure Monitoring project. It uses Expo with file-based routing (Expo Router) and currently renders the EC2 Instances list using mock data.
 
-**Current Status**
-- Local `ios/` or `android/` directories are generated and should only be committed if we decide to use a bare workflow.
+## Quick Start
 
-**Where To Develop**
-- All mobile work should live under `apps/mobile/`.
-- Keep shared cross-platform code in `apps/mobile/src` (or `apps/mobile/app` if using Expo Router).
-- Platform-specific code goes in `apps/mobile/ios` and `apps/mobile/android` only if we choose a bare workflow.
+1. Install dependencies
 
-**Getting Started (When We Scaffold)**
-1. Choose a workflow: Expo (managed) for fastest iteration, or React Native CLI (bare) if we need full native control.
-2. Scaffold the app inside this folder: `npx create-expo-app .` or `npx react-native init CloudMonitor` and place it under `apps/mobile/`.
-3. Install dependencies and run using the scripts in `apps/mobile/package.json` (commonly `npm run start`, `npm run ios`, `npm run android`).
+   ```bash
+   npm install
+   ```
 
-**Configuration**
-- Define the API base URL via environment variables (for example in `.env`).
-- Document required values here once the backend API contract is finalized.
+2. Start Metro
 
-**OpenAPI Client**
-- The shared OpenAPI client lives in `packages/api-client`.
-- Place the spec at `docs/openapi/openapi.yaml`, then run `npm run generate --workspace ./packages/api-client`.
-- Use `createApiClient` in the mobile app with your base URL.
+   ```bash
+   npx expo start
+   ```
 
-```ts
-import { createApiClient } from "api-client";
+3. Open the iOS Simulator
 
-const api = createApiClient(API_BASE_URL);
-```
+   Press `i` in the Expo terminal, or run:
 
-**What To Commit**
-- Commit `package.json`, app configuration (`app.json`/`app.config.*`), source (`src/` or `app/`), `assets/`, and TypeScript config.
-- Do not commit `node_modules/`, `ios/Pods/`, `android/.gradle/`, `.expo/`, build outputs, or local Xcode/Android Studio user data.
+   ```bash
+   npx expo start --ios
+   ```
 
-**Next Step**
-When the mobile app is scaffolded, replace the placeholders above with the exact commands and folder layout used.
-## TypeScript check
-npx tsc --noEmit
+## Current Screen
+
+- Instances list (EC2 name, ID, state, type): `app/(tabs)/index.tsx`
+- Mock data source: `data/mockInstances.ts`
+- Card component: `components/InstanceCard.tsx`
+- Types: `types/instances.ts`
+
+## Project Structure
+
+- `app/` — file-based routes (Expo Router)
+- `components/` — shared UI components
+- `data/` — mock data and local fixtures
+- `types/` — shared TypeScript types
+- `assets/` — images and fonts
+
+## Next Step (API Wiring)
+
+Replace `mockInstances` with real data once the OpenAPI client is ready, and connect the screen to the backend.
+
+## Troubleshooting
+
+- If you see a white screen, stop Metro and restart from `apps/mobile` with `npx expo start -c`.
+- Make sure Metro is running from this folder: `.../SER517-Team5/apps/mobile`.
+
+## Learn More
+
+- Expo Router docs: https://docs.expo.dev/router/introduction/
+- Expo docs: https://docs.expo.dev/
