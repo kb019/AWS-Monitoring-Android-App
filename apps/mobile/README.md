@@ -4,5 +4,39 @@
 npm install
 npx expo start --web --clear
 
+**Current Status**
+- Local `ios/` or `android/` directories are generated and should only be committed if we decide to use a bare workflow.
+
+**Where To Develop**
+- All mobile work should live under `apps/mobile/`.
+- Keep shared cross-platform code in `apps/mobile/src` (or `apps/mobile/app` if using Expo Router).
+- Platform-specific code goes in `apps/mobile/ios` and `apps/mobile/android` only if we choose a bare workflow.
+
+**Getting Started (When We Scaffold)**
+1. Choose a workflow: Expo (managed) for fastest iteration, or React Native CLI (bare) if we need full native control.
+2. Scaffold the app inside this folder: `npx create-expo-app .` or `npx react-native init CloudMonitor` and place it under `apps/mobile/`.
+3. Install dependencies and run using the scripts in `apps/mobile/package.json` (commonly `npm run start`, `npm run ios`, `npm run android`).
+
+**Configuration**
+- Define the API base URL via environment variables (for example in `.env`).
+- Document required values here once the backend API contract is finalized.
+
+**OpenAPI Client**
+- The shared OpenAPI client lives in `packages/api-client`.
+- Place the spec at `docs/openapi/openapi.yaml`, then run `npm run generate --workspace ./packages/api-client`.
+- Use `createApiClient` in the mobile app with your base URL.
+
+```ts
+import { createApiClient } from "api-client";
+
+const api = createApiClient(API_BASE_URL);
+```
+
+**What To Commit**
+- Commit `package.json`, app configuration (`app.json`/`app.config.*`), source (`src/` or `app/`), `assets/`, and TypeScript config.
+- Do not commit `node_modules/`, `ios/Pods/`, `android/.gradle/`, `.expo/`, build outputs, or local Xcode/Android Studio user data.
+
+**Next Step**
+When the mobile app is scaffolded, replace the placeholders above with the exact commands and folder layout used.
 ## TypeScript check
 npx tsc --noEmit

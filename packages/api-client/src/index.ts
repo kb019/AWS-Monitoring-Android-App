@@ -21,3 +21,7 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
 
   return (await res.json()) as T;
 }
+
+export { createApiClient } from "./openapi/client";
+export type { ApiClient } from "./openapi/client";
+export type { paths as OpenApiPaths } from "./openapi/schema";
