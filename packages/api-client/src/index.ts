@@ -2,7 +2,10 @@ import { API_URL, getApiBaseUrl, setApiBaseUrl } from "./constants";
 
 export { API_URL, getApiBaseUrl, setApiBaseUrl };
 
-export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+export async function apiFetch<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<T> {
   const baseUrl = getApiBaseUrl().replace(/\/+$/, "");
   const endpoint = path.startsWith("/") ? path : `/${path}`;
 

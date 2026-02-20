@@ -14,9 +14,7 @@ export default function InstancesScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <Text style={styles.title}>Instances</Text>
-        <Text style={styles.subtitle}>
-          EC2 name, ID, state, and type
-        </Text>
+        <Text style={styles.subtitle}>EC2 name, ID, state, and type</Text>
       </View>
 
       <FlatList

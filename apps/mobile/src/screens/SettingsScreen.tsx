@@ -17,7 +17,9 @@ export default function SettingsScreen() {
         }}
       >
         <Text style={{ fontSize: 16 }}>API Base URL: placeholder</Text>
-        <Text style={{ fontSize: 16, marginTop: 8 }}>Auth Token: placeholder</Text>
+        <Text style={{ fontSize: 16, marginTop: 8 }}>
+          Auth Token: placeholder
+        </Text>
       </View>
     </View>
   );
