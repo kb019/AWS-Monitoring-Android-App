@@ -30,7 +30,7 @@
     "lint:webapp": "npm run lint --prefix ./apps/web",
     "lint": "npm run lint:api && npm run lint:webapp ",
     "install:dep": "npm install && npm install --prefix ./apps/web",
-    "setup":"npm run install:dep && npm run build --prefix ./packages/api-client",
+    "setup": "npm run install:dep && npm run build --prefix ./packages/api-client",
     "install:web": "npm install --prefix ./apps/web",
     "web:dev": "npm run dev --prefix ./apps/web",
     "api-client:dev": "npm run dev --prefix ./packages/api-client",
@@ -39,5 +39,10 @@
   "devDependencies": {
     "concurrently": "^9.2.1",
     "husky": "^9.1.7"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1693.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
   }
 }

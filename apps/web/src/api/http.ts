@@ -1,7 +1,3 @@
-import {apiFetch} from "api-client";
-
+import { apiFetch } from "api-client";
 
 export { apiFetch };
-
-
-

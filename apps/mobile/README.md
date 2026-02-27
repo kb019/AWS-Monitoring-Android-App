@@ -39,8 +39,16 @@ This is the mobile app for the Cloud Infrastructure Monitoring project. It uses 
 - `app/` — file-based routes (Expo Router)
 - `components/` — shared UI components
 - `data/` — mock data and local fixtures
+- `services/` — app services (auth, API helpers)
 - `types/` — shared TypeScript types
 - `assets/` — images and fonts
+
+## Secure Token Storage
+
+JWTs are stored using `expo-secure-store` via:
+- `services/authStorage.ts`
+
+Use `setAccessToken`, `getAccessToken`, and `clearTokens` to manage tokens.
 
 ## Next Step (API Wiring)
 
