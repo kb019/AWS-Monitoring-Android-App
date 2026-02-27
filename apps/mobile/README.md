@@ -27,8 +27,11 @@ This is the mobile app for the Cloud Infrastructure Monitoring project. It uses 
 ## Current Screen
 
 - Instances list (EC2 name, ID, state, type): `app/(tabs)/index.tsx`
+- Instance detail + CPU chart: `app/instance/[id].tsx`
 - Mock data source: `data/mockInstances.ts`
+- CPU mock data: `data/mockCpuSeries.ts`
 - Card component: `components/InstanceCard.tsx`
+- Chart component: `components/CpuUsageChart.tsx`
 - Types: `types/instances.ts`
 
 ## Project Structure
