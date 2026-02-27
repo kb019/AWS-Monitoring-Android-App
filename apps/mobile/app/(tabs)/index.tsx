@@ -1,13 +1,31 @@
 import React from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useRouter } from "expo-router";
 
 import { InstanceCard } from "@/components/InstanceCard";
 import { mockInstances } from "@/data/mockInstances";
 import type { InstanceSummary } from "@/types/instances";
 
 export default function InstancesScreen() {
+  const router = useRouter();
+
   const renderItem = ({ item }: { item: InstanceSummary }) => (
-    <InstanceCard instance={item} />
+    <Pressable
+      accessibilityRole="button"
+      onPress={() =>
+        router.push({ pathname: "/instance/[id]", params: { id: item.id } })
+      }
+      style={({ pressed }) => [styles.cardWrapper, pressed && styles.cardPressed]}
+    >
+      <InstanceCard instance={item} />
+    </Pressable>
   );
 
   return (
@@ -54,6 +72,13 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 20,
     paddingBottom: 24,
+  },
+  cardWrapper: {
+    borderRadius: 16,
+  },
+  cardPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.99 }],
   },
   separator: {
     height: 12,
