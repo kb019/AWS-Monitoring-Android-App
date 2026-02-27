@@ -1,33 +1,34 @@
 import express from "express";
 import cors from "cors";
 import AWS from "aws-sdk";
-import http from "http";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* ---------- AWS CONFIG ---------- */
 AWS.config.update({ region: "us-east-2" });
 
 const ec2 = new AWS.EC2();
 const cloudwatch = new AWS.CloudWatch();
 
-app.get("/monitoring", async (req, res) => {
+/* ---------- MONITORING ROUTE ---------- */
+app.get("/monitoring", async (req, res, next) => {
   try {
     console.log("🔹 Monitoring endpoint hit");
 
     const result = [];
 
-
     const ec2Data = await ec2.describeInstances({
       Filters: [{ Name: "instance-state-name", Values: ["running"] }]
     }).promise();
 
-    console.log("🔹 EC2 response received");
-
     if (!ec2Data.Reservations.length) {
-      console.log("⚠️ No running instances found");
-      return res.json({ instances: [] });
+      return res.status(200).json({
+        timestamp: new Date().toISOString(),
+        region: AWS.config.region,
+        instances: []
+      });
     }
 
     for (const reservation of ec2Data.Reservations) {
@@ -37,11 +38,8 @@ app.get("/monitoring", async (req, res) => {
         const state = instance.State.Name;
         const type = instance.InstanceType;
 
-        console.log(`🔸 Fetching metrics for ${instanceId}`);
-
         const endTime = new Date();
         const startTime = new Date(endTime.getTime() - 60 * 60 * 1000);
-
 
         const [
           cpuData,
@@ -133,31 +131,39 @@ app.get("/monitoring", async (req, res) => {
             diskWriteOps: diskWrite
           }
         });
-
-        console.log(`✅ Metrics fetched for ${instanceId}`);
       }
     }
 
-    console.log("✅ Sending response");
-    res.json({
+    res.status(200).json({
       timestamp: new Date().toISOString(),
       region: AWS.config.region,
       instances: result
     });
 
   } catch (error) {
-    console.error("❌ Error occurred:", error);
-    res.status(500).json({
-      status: "Error fetching monitoring data",
-      error: error.message
-    });
+    next(error);
   }
 });
 
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found"
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error("❌ Backend Error:", err);
+
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: err.message
+  });
+});
+
+
 const PORT = 4000;
 
-const server = http.createServer(app);
-
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
