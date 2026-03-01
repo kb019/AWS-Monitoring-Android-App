@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import { CpuUsageChart } from "@/components/CpuUsageChart";
+import {
+  TimeRangeSelector,
+  type TimeRangeOption,
+} from "@/components/TimeRangeSelector";
 import { mockCpuSeries } from "@/data/mockCpuSeries";
 import { mockInstances } from "@/data/mockInstances";
 import type { InstanceState } from "@/types/instances";
@@ -22,11 +26,16 @@ export default function InstanceDetailScreen() {
   const instance =
     mockInstances.find((item) => item.id === instanceId) ?? mockInstances[0];
 
-  const average = Math.round(
-    mockCpuSeries.reduce((sum, point) => sum + point.value, 0) /
-      mockCpuSeries.length
-  );
-  const peak = Math.max(...mockCpuSeries.map((point) => point.value));
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>("1h");
+
+  const selectedSeries = mockCpuSeries;
+  const { average, peak } = useMemo(() => {
+    const total = selectedSeries.reduce((sum, point) => sum + point.value, 0);
+    return {
+      average: Math.round(total / selectedSeries.length),
+      peak: Math.max(...selectedSeries.map((point) => point.value)),
+    };
+  }, [selectedSeries, timeRange]);
   const stateStyle = STATE_COLORS[instance.state];
 
   return (
@@ -58,7 +67,9 @@ export default function InstanceDetailScreen() {
         <View style={styles.chartHeader}>
           <View>
             <Text style={styles.chartTitle}>CPU Utilization</Text>
-            <Text style={styles.chartSubtitle}>Last 60 minutes</Text>
+            <Text style={styles.chartSubtitle}>
+              Selected range: {timeRange}
+            </Text>
           </View>
           <View style={styles.chartStats}>
             <View style={styles.statBlock}>
@@ -71,7 +82,8 @@ export default function InstanceDetailScreen() {
             </View>
           </View>
         </View>
-        <CpuUsageChart data={mockCpuSeries} />
+        <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
+        <CpuUsageChart data={selectedSeries} />
       </View>
     </ScrollView>
   );
