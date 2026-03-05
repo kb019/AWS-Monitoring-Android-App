@@ -1,5 +1,9 @@
-{
-  "expo": {
+import { ExpoConfig, ConfigContext } from 'expo/config';
+
+import  androidConfig from "./platforms/android/app.config";
+import  iosConfig from "./platforms/ios/app.config";
+
+const commonConfig:ExpoConfig={
     "name": "mobile",
     "slug": "mobile",
     "version": "1.0.0",
@@ -8,19 +12,10 @@
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.mobile"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
-      },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "web": {
       "output": "static",
@@ -39,11 +34,24 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
-  }
+    },
+    
 }
+
+
+
+
+export default ({ config }: ConfigContext): ExpoConfig => {
+
+  return {
+  ...config,
+  ...commonConfig,
+  ...{"android":androidConfig},
+  ...{"ios":iosConfig}
+}}

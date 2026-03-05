@@ -39,6 +39,7 @@ This is the mobile app for the Cloud Infrastructure Monitoring project. It uses 
 - `app/` — file-based routes (Expo Router)
 - `components/` — shared UI components
 - `data/` — mock data and local fixtures
+
 - `services/` — API helpers and backend integration
 - `types/` — shared TypeScript types
 - `assets/` — images and fonts
@@ -48,6 +49,7 @@ This is the mobile app for the Cloud Infrastructure Monitoring project. It uses 
 - Client: `services/cloudWatchApi.ts`
 - Endpoint: `GET /monitoring` (from `aws/backend/server.js`)
 - Base URL: set `EXPO_PUBLIC_API_URL` (defaults to `http://localhost:5000`)
+
 
 ## Next Step (API Wiring)
 
