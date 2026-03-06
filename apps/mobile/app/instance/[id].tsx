@@ -34,6 +34,7 @@ export default function InstanceDetailScreen() {
   const [monitoring, setMonitoring] = useState<MonitoringInstance | null>(null);
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
   const [metricsError, setMetricsError] = useState<string | null>(null);
+  const [useMockData, setUseMockData] = useState(false);
 
   const selectedSeries = mockCpuSeries;
   const { average, peak } = useMemo(() => {
@@ -43,7 +44,9 @@ export default function InstanceDetailScreen() {
       peak: Math.max(...selectedSeries.map((point) => point.value)),
     };
   }, [selectedSeries, timeRange]);
-  const stateStyle = STATE_COLORS[instance.state];
+  const displayState = monitoring?.state ?? instance.state;
+  const displayType = monitoring?.type ?? instance.type;
+  const stateStyle = STATE_COLORS[displayState];
 
   useEffect(() => {
     let isMounted = true;
@@ -55,10 +58,15 @@ export default function InstanceDetailScreen() {
         const result = await fetchInstanceMonitoring(instance.id, timeRange);
         if (isMounted) {
           setMonitoring(result);
+          setUseMockData(!result);
+          if (!result) {
+            setMetricsError("CloudWatch unavailable. Showing mock data.");
+          }
         }
       } catch (error) {
         if (isMounted) {
-          setMetricsError("Unable to load CloudWatch metrics.");
+          setMetricsError("CloudWatch unavailable. Showing mock data.");
+          setUseMockData(true);
         }
       } finally {
         if (isMounted) {
@@ -86,16 +94,16 @@ export default function InstanceDetailScreen() {
           <Text style={styles.summaryLabel}>State</Text>
           <View
             style={[styles.statePill, { backgroundColor: stateStyle.bg }]}
-            accessibilityLabel={`Instance state ${instance.state}`}
+            accessibilityLabel={`Instance state ${displayState}`}
           >
             <Text style={[styles.stateText, { color: stateStyle.text }]}>
-              {instance.state}
+              {displayState}
             </Text>
           </View>
         </View>
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Type</Text>
-          <Text style={styles.summaryValue}>{instance.type}</Text>
+          <Text style={styles.summaryValue}>{displayType}</Text>
         </View>
       </View>
 
@@ -114,7 +122,10 @@ export default function InstanceDetailScreen() {
             {isLoadingMetrics && (
               <Text style={styles.loadingText}>Loading metrics…</Text>
             )}
-            {metricsError && (
+            {useMockData && !isLoadingMetrics && (
+              <Text style={styles.mockText}>Using mock data</Text>
+            )}
+            {metricsError && !useMockData && (
               <Text style={styles.errorText}>{metricsError}</Text>
             )}
           </View>
@@ -224,6 +235,11 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 12,
     color: "#94A3B8",
+  },
+  mockText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#64748B",
   },
   errorText: {
     marginTop: 6,
