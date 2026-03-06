@@ -6,16 +6,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* ---------- AWS CONFIG ---------- */
 AWS.config.update({ region: "us-east-2" });
 
 const ec2 = new AWS.EC2();
 const cloudwatch = new AWS.CloudWatch();
 
-/* ---------- MONITORING ROUTE ---------- */
 app.get("/monitoring", async (req, res, next) => {
   try {
-    console.log("🔹 Monitoring endpoint hit");
+    console.log("Monitoring endpoint hit");
 
     const result = [];
 
@@ -86,7 +84,7 @@ app.get("/monitoring", async (req, res, next) => {
             EndTime: endTime,
             Period: 300,
             Statistics: ["Sum"]
-          }).promise(),
+          }).promise(),s
 
           cloudwatch.getMetricStatistics({
             Namespace: "AWS/EC2",
@@ -153,7 +151,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error("❌ Backend Error:", err);
+  console.error("Backend Error:", err);
 
   res.status(500).json({
     error: "Internal Server Error",
@@ -165,5 +163,5 @@ app.use((err, req, res, next) => {
 const PORT = 4000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
