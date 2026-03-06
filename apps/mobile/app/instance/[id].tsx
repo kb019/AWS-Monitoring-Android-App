@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
@@ -9,6 +9,10 @@ import {
 } from "@/components/TimeRangeSelector";
 import { mockCpuSeries } from "@/data/mockCpuSeries";
 import { mockInstances } from "@/data/mockInstances";
+import {
+  fetchInstanceMonitoring,
+  type MonitoringInstance,
+} from "@/services/cloudWatchApi";
 import type { InstanceState } from "@/types/instances";
 
 const STATE_COLORS: Record<InstanceState, { bg: string; text: string }> = {
@@ -27,6 +31,9 @@ export default function InstanceDetailScreen() {
     mockInstances.find((item) => item.id === instanceId) ?? mockInstances[0];
 
   const [timeRange, setTimeRange] = useState<TimeRangeOption>("1h");
+  const [monitoring, setMonitoring] = useState<MonitoringInstance | null>(null);
+  const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
+  const [metricsError, setMetricsError] = useState<string | null>(null);
 
   const selectedSeries = mockCpuSeries;
   const { average, peak } = useMemo(() => {
@@ -37,6 +44,35 @@ export default function InstanceDetailScreen() {
     };
   }, [selectedSeries, timeRange]);
   const stateStyle = STATE_COLORS[instance.state];
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadMetrics = async () => {
+      setIsLoadingMetrics(true);
+      setMetricsError(null);
+      try {
+        const result = await fetchInstanceMonitoring(instance.id, timeRange);
+        if (isMounted) {
+          setMonitoring(result);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setMetricsError("Unable to load CloudWatch metrics.");
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingMetrics(false);
+        }
+      }
+    };
+
+    loadMetrics();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [instance.id, timeRange]);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -70,6 +106,17 @@ export default function InstanceDetailScreen() {
             <Text style={styles.chartSubtitle}>
               Selected range: {timeRange}
             </Text>
+            {monitoring && (
+              <Text style={styles.liveMetric}>
+                Live CPU: {monitoring.cpuPercent}%
+              </Text>
+            )}
+            {isLoadingMetrics && (
+              <Text style={styles.loadingText}>Loading metrics…</Text>
+            )}
+            {metricsError && (
+              <Text style={styles.errorText}>{metricsError}</Text>
+            )}
           </View>
           <View style={styles.chartStats}>
             <View style={styles.statBlock}>
@@ -166,6 +213,22 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 12,
     color: "#64748B",
+  },
+  liveMetric: {
+    marginTop: 8,
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#0F172A",
+  },
+  loadingText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#94A3B8",
+  },
+  errorText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#DC2626",
   },
   chartStats: {
     flexDirection: "row",
