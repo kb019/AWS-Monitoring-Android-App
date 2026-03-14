@@ -16,7 +16,8 @@ export function CpuUsageChart({ data, height = 140 }: CpuUsageChartProps) {
 
   return (
     <View>
-      <View style={[styles.chart, { height }]}
+      <View
+        style={[styles.chart, { height }]}
         accessibilityLabel="CPU utilization chart"
       >
         {safeData.map((point, index) => {
@@ -30,7 +31,9 @@ export function CpuUsageChart({ data, height = 140 }: CpuUsageChartProps) {
       </View>
       <View style={styles.axisRow}>
         <Text style={styles.axisLabel}>{safeData[0].label}</Text>
-        <Text style={styles.axisLabel}>{safeData[safeData.length - 1].label}</Text>
+        <Text style={styles.axisLabel}>
+          {safeData[safeData.length - 1].label}
+        </Text>
       </View>
     </View>
   );
