@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
@@ -9,6 +9,10 @@ import {
 } from "@/components/TimeRangeSelector";
 import { mockCpuSeries } from "@/data/mockCpuSeries";
 import { mockInstances } from "@/data/mockInstances";
+import {
+  fetchInstanceMonitoring,
+  type MonitoringInstance,
+} from "@/services/cloudWatchApi";
 import type { InstanceState } from "@/types/instances";
 
 const STATE_COLORS: Record<InstanceState, { bg: string; text: string }> = {
@@ -27,6 +31,10 @@ export default function InstanceDetailScreen() {
     mockInstances.find((item) => item.id === instanceId) ?? mockInstances[0];
 
   const [timeRange, setTimeRange] = useState<TimeRangeOption>("1h");
+  const [monitoring, setMonitoring] = useState<MonitoringInstance | null>(null);
+  const [isLoadingMetrics, setIsLoadingMetrics] = useState(false);
+  const [metricsError, setMetricsError] = useState<string | null>(null);
+  const [useMockData, setUseMockData] = useState(false);
 
   const selectedSeries = mockCpuSeries;
   const { average, peak } = useMemo(() => {
@@ -50,16 +58,16 @@ export default function InstanceDetailScreen() {
           <Text style={styles.summaryLabel}>State</Text>
           <View
             style={[styles.statePill, { backgroundColor: stateStyle.bg }]}
-            accessibilityLabel={`Instance state ${instance.state}`}
+            accessibilityLabel={`Instance state ${displayState}`}
           >
             <Text style={[styles.stateText, { color: stateStyle.text }]}>
-              {instance.state}
+              {displayState}
             </Text>
           </View>
         </View>
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>Type</Text>
-          <Text style={styles.summaryValue}>{instance.type}</Text>
+          <Text style={styles.summaryValue}>{displayType}</Text>
         </View>
       </View>
 
@@ -70,6 +78,20 @@ export default function InstanceDetailScreen() {
             <Text style={styles.chartSubtitle}>
               Selected range: {timeRange}
             </Text>
+            {monitoring && (
+              <Text style={styles.liveMetric}>
+                Live CPU: {monitoring.cpuPercent}%
+              </Text>
+            )}
+            {isLoadingMetrics && (
+              <Text style={styles.loadingText}>Loading metrics…</Text>
+            )}
+            {useMockData && !isLoadingMetrics && (
+              <Text style={styles.mockText}>Using mock data</Text>
+            )}
+            {metricsError && !useMockData && (
+              <Text style={styles.errorText}>{metricsError}</Text>
+            )}
           </View>
           <View style={styles.chartStats}>
             <View style={styles.statBlock}>
@@ -166,6 +188,27 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 12,
     color: "#64748B",
+  },
+  liveMetric: {
+    marginTop: 8,
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#0F172A",
+  },
+  loadingText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#94A3B8",
+  },
+  mockText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#64748B",
+  },
+  errorText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: "#DC2626",
   },
   chartStats: {
     flexDirection: "row",

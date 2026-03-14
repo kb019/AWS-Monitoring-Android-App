@@ -39,16 +39,17 @@ This is the mobile app for the Cloud Infrastructure Monitoring project. It uses 
 - `app/` — file-based routes (Expo Router)
 - `components/` — shared UI components
 - `data/` — mock data and local fixtures
-- `services/` — app services (auth, API helpers)
+
+- `services/` — API helpers and backend integration
 - `types/` — shared TypeScript types
 - `assets/` — images and fonts
 
-## Secure Token Storage
+## CloudWatch Metrics API
 
-JWTs are stored using `expo-secure-store` via:
-- `services/authStorage.ts`
+- Client: `services/cloudWatchApi.ts`
+- Endpoint: `GET /monitoring` (from `aws/backend/server.js`)
+- Base URL: set `EXPO_PUBLIC_API_URL` (defaults to `http://localhost:5000`)
 
-Use `setAccessToken`, `getAccessToken`, and `clearTokens` to manage tokens.
 
 ## Next Step (API Wiring)
 
