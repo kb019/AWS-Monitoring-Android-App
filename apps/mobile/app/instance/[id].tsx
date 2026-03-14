@@ -35,7 +35,7 @@ export default function InstanceDetailScreen() {
       average: Math.round(total / selectedSeries.length),
       peak: Math.max(...selectedSeries.map((point) => point.value)),
     };
-  }, [selectedSeries, timeRange]);
+  }, [selectedSeries]);
   const stateStyle = STATE_COLORS[instance.state];
 
   return (
