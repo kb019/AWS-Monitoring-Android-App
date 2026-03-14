@@ -43,8 +43,44 @@ export default function InstanceDetailScreen() {
       average: Math.round(total / selectedSeries.length),
       peak: Math.max(...selectedSeries.map((point) => point.value)),
     };
-  }, [selectedSeries]);
-  const stateStyle = STATE_COLORS[instance.state];
+  }, [selectedSeries, timeRange]);
+  const displayState = monitoring?.state ?? instance.state;
+  const displayType = monitoring?.type ?? instance.type;
+  const stateStyle = STATE_COLORS[displayState];
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadMetrics = async () => {
+      setIsLoadingMetrics(true);
+      setMetricsError(null);
+      try {
+        const result = await fetchInstanceMonitoring(instance.id, timeRange);
+        if (isMounted) {
+          setMonitoring(result);
+          setUseMockData(!result);
+          if (!result) {
+            setMetricsError("CloudWatch unavailable. Showing mock data.");
+          }
+        }
+      } catch (error) {
+        if (isMounted) {
+          setMetricsError("CloudWatch unavailable. Showing mock data.");
+          setUseMockData(true);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingMetrics(false);
+        }
+      }
+    };
+
+    loadMetrics();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [instance.id, timeRange]);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
